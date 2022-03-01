@@ -48,10 +48,15 @@ function enable_hover() {
 
     fill(100);
     noStroke()
-    rect(mouseX - 6, mouseY - 12, text_width + 12, 16);
+    rect(mouseX - 6, mouseY - 15, text_width + 12, 16);
     fill(255);
     // noStroke()
+    textAlign(LEFT, BOTTOM)
     text(String(description), mouseX, mouseY);
+    // reset
+    fill(150)
+
+
   }
 }
 
@@ -157,6 +162,17 @@ function mouseWheel(event) {
   }
 }
 
+function print_controls() {
+  let controls = 'Double left click on a node: Expand this node\nLeft click and hold a node: Drag this node\nStrg plus left click on a node: Go to this nodes description\nRight click on a node: Remove this node from the visualization\n (careful; removing the last node requires reloading to bring it back)'
+  textAlign(RIGHT, BOTTOM)
+  text(controls, width - 8, height - 8)
+  fill(150)
+  line(0, 0, width, 0)
+  line(width, 0, width, height)
+  line(width, height, 0, height)
+  line(0, 0, 0, height)
+}
+
 
 function setup() {
 
@@ -189,7 +205,10 @@ function draw() {
   clear();
 
   view.update_canvas()
+
   if (hover) enable_hover();
+
+  print_controls()
 
   // for (let p5arrowConnector of p5arrowConnectors) {
   //   p5arrowConnector.show();
