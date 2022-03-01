@@ -163,7 +163,7 @@ function mouseWheel(event) {
 }
 
 function print_controls() {
-  let controls = 'Double left click on a node: Expand this node\nLeft click and hold a node: Drag this node\nStrg plus left click on a node: Go to this nodes description\nRight click on a node: Remove this node from the visualization\n (careful; removing the last node requires reloading to bring it back)'
+  let controls = 'Double left click on a node: Expand this node\nLeft click and hold a node: Drag this node\nStrg plus left click on a node: Go to this nodes description\nWheel click on a node: Remove this node from the visualization\n (careful; removing the last node requires reloading to bring it back)'
   textAlign(RIGHT, BOTTOM)
   text(controls, width - 8, height - 8)
   fill(150)
