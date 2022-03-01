@@ -11,7 +11,7 @@ const PREFIXES = [
 const PREDICATES = [
   'dqv:inDimension',
   'dqv:inCategory',
-  'skos:broader'
+  'gkq:inRegister'
 ]
 
 
