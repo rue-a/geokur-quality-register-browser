@@ -12,6 +12,9 @@ class P5Node {
         this.target_x = null;
         this.target_y = null;
         this.clicked = false;
+        this.begin_hover;
+        this.hovered_prolonged = false;
+        this.hovered = false;
     }
 
 
@@ -27,7 +30,7 @@ class P5Node {
     get_id() { return this.id }
 
     double_clicked() {
-        let distance = dist(mouseX, mouseY, this.x, this.y);
+        const distance = dist(mouseX, mouseY, this.x, this.y);
         if (distance < this.r) {
             return this.id;
         }
@@ -36,29 +39,19 @@ class P5Node {
         }
     }
 
-    hover() {
-
-        let distance = dist(mouseX, mouseY, this.x, this.y);
-        if (distance < this.r) {
-            return this.description;
-        }
-        else {
-            return null
-        }
-    }
-
     strg_plus_left_clicked() {
-        let distance = dist(mouseX, mouseY, this.x, this.y);
+        const distance = dist(mouseX, mouseY, this.x, this.y);
         if (distance < this.r) {
-            this.drag = false;
-            window.location = this.id;
+            this.clicked = false;
+            window.open(this.id);
         }
     }
 
     left_clicked() {
-        let distance = dist(mouseX, mouseY, this.x, this.y);
+        const distance = dist(mouseX, mouseY, this.x, this.y);
         if (distance < this.r) {
             this.clicked = true
+            // this.hovered_prolonged = true;
         }
         return this.clicked;
     }
@@ -68,7 +61,7 @@ class P5Node {
     }
 
     right_clicked() {
-        let distance = dist(mouseX, mouseY, this.x, this.y);
+        const distance = dist(mouseX, mouseY, this.x, this.y);
         if (distance < this.r) {
             return this.id;
         }
@@ -88,7 +81,27 @@ class P5Node {
         else {
             return false;
         }
+    }
 
+    hover() {
+        const distance = dist(mouseX, mouseY, this.x, this.y);
+        if (distance < this.r) {
+
+            if (!(this.hovered)) {
+                this.begin_hover = millis();
+            }
+            this.hovered = true;
+
+            // console.log()
+            console.log(millis() - this.begin_hover)
+            if ((millis() - this.begin_hover) > 500) {
+                this.hovered_prolonged = true;
+            }
+        }
+        else {
+            this.hovered = false;
+            this.hovered_prolonged = false;
+        }
     }
 
 
@@ -110,16 +123,28 @@ class P5Node {
         push();
         translate(this.x, this.y);
 
+        if (this.hovered_prolonged) {
+            noStroke()
+            fill("red")
+            circle(0, 0, 2.2 * this.r);
+        }
+
         if (color) this.color = color
         fill(this.color)
         noStroke()
         circle(0, 0, 2 * this.r);
 
         if (text_color) this.text_color = text_color
+        const text_width = textWidth(String(this.label));
+        fill('rgba(255,255,255,0.8)');
+        noStroke()
+        rect(-(text_width + 8) / 2, -8, text_width + 8, 16);
         fill(this.text_color)
         textAlign(CENTER, CENTER);
-
         text(this.label, 0, 0);
+
+
+
         pop();
     }
 }

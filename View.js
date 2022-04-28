@@ -1,5 +1,5 @@
 class View {
-    constructor(model, width, height, horizontal_margin, vertical_margin, node_size) {
+    constructor(model, width, height, horizontal_margin, vertical_margin, node_size, node_colors) {
         this.model = model;
         this.width = width;
         this.height = height;
@@ -10,6 +10,7 @@ class View {
         this.zoom_level = 1;
         this.r = node_size;
         this.mode = 'horizontal'
+        this.node_colors = node_colors
     }
 
     translate_nodes(x, y, coords_old) {
@@ -163,9 +164,10 @@ class View {
         }
         for (let p5node of Object.values(this.p5nodes)) {
             let node_color = null;
-            if (p5node.class == "http://www.w3.org/ns/dqv#Category") node_color = color(123, 169, 255)
-            if (p5node.class == "http://www.w3.org/ns/dqv#Dimension") node_color = color(255, 167, 132)
-            if (p5node.class == "http://www.w3.org/ns/dqv#Metric") node_color = color(76, 240, 166)
+            for (let node_class of Object.keys(this.node_colors)) {
+
+                if (p5node.class.includes(node_class)) node_color = node_colors[node_class]
+            }
             p5node.show(node_color)
         }
 

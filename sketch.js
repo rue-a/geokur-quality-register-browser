@@ -12,53 +12,39 @@ const PREDICATES = [
   'dqv:inDimension',
   'dqv:inCategory',
   'gkq:inRegister'
-]
+];
+
+const endpoint = "https://geokur-dmp2.geo.tu-dresden.de/fuseki/geokur_quality_register/sparql";
+const initial_node = 'https://geokur-dmp.geo.tu-dresden.de/quality-register#qualityRegister';
 
 
-let canvas
+node_colors = {
+  "http://www.w3.org/ns/dqv#Category": 'rgb(123, 169, 255)',
+  "http://www.w3.org/ns/dqv#Dimension": 'rgb(255, 167, 132)',
+  "http://www.w3.org/ns/dqv#Metric": 'rgb(76, 240, 166)'
+};
 
+const radius = 20;
+
+let hover = true;
 
 const width = window.innerWidth;
 const height = window.innerHeight;
 const horizontal_margin = width / 5;
 const vertical_margin = height / 5;
-const radius = 20;
 
+const node_model = new Model();
+const view = new View(node_model, width, height, horizontal_margin, vertical_margin, radius, node_colors);
+
+// 
+let canvas
 let left_clicked_x;
 let left_clicked_y;
 let coords_old = {};
 let clicked_node;
-let hover = true;
-
-const node_model = new Model();
-const view = new View(node_model, width, height, horizontal_margin, vertical_margin, radius)
-
 let strg_pressed = false;
 
 
-function enable_hover() {
-  let description = null
-  for (let p5node of view.get_nodes()) {
-    let hover = p5node.hover();
-    if (hover) description = hover;
-  }
-  if (description) {
-    var text_width = textWidth(String(description));
-
-
-    fill(100);
-    noStroke()
-    rect(mouseX - 6, mouseY - 15, text_width + 12, 16);
-    fill(255);
-    // noStroke()
-    textAlign(LEFT, BOTTOM)
-    text(String(description), mouseX, mouseY);
-    // reset
-    fill(150)
-
-
-  }
-}
 
 function doubleClicked() {
   for (let p5node of view.get_nodes()) {
@@ -112,11 +98,12 @@ function mousePressed() {
 
   }
   if (mouseButton === CENTER) {
+    // delete node and in- and outgoing edges
     for (let p5node of view.get_nodes()) {
       let node_id = p5node.right_clicked();
       if (node_id) {
         let edges = node_model.get_edges()
-        // delete all nodes and edges
+
         for (let i = edges.length - 1; i >= 0; i--) {
           let edge = edges[i]
           if (
@@ -136,6 +123,7 @@ function mousePressed() {
 }
 
 function mouseReleased() {
+  // stop dragging
   hover = true;
   for (let p5node of view.get_nodes()) {
     p5node.released();
@@ -143,8 +131,7 @@ function mouseReleased() {
 }
 
 function mouseDragged() {
-
-
+  // drag node or canvas
   for (let p5node of view.get_nodes()) {
     p5node.dragged()
   }
@@ -154,6 +141,7 @@ function mouseDragged() {
 }
 
 function mouseWheel(event) {
+  // zoom in or out
   if (event.delta < 0) {
     view.zoom_in()
   }
@@ -162,8 +150,14 @@ function mouseWheel(event) {
   }
 }
 
+function enable_hover() {
+  for (let p5node of view.get_nodes()) {
+    p5node.hover();
+  }
+}
+
 function print_controls() {
-  let controls = 'Double left click on a node: Expand this node\nLeft click and hold a node: Drag this node\nStrg plus left click on a node: Go to this nodes description\nWheel click on a node: Remove this node from the visualization\n (careful; removing the last node requires reloading to bring it back)'
+  let controls = 'Double left click on a node: Expand this node\nLeft click and hold a node: Drag this node\nStrg plus left click on a node: Go to this nodes IRI\nWheel click on a node: Remove this node from the visualization\n (careful; removing the last node requires reloading to bring it back)'
   textAlign(RIGHT, BOTTOM)
   text(controls, width - 8, height - 8)
   fill(150)
@@ -183,11 +177,11 @@ function setup() {
       print(id)
     }
   })
-  node_model.set_endpoint("https://geokur-dmp2.geo.tu-dresden.de/fuseki/geokur_quality_register/sparql")
-  node_model.set_prefixes(PREFIXES)
+  node_model.set_endpoint(endpoint);
+  node_model.set_prefixes(PREFIXES);
 
 
-  node_model.add_node('https://geokur-dmp.geo.tu-dresden.de/quality-register#qualityRegister').then(() => {
+  node_model.add_node(initial_node).then(() => {
     view.update_data();
   })
 

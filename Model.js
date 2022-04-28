@@ -66,11 +66,11 @@ class Model {
         ]
         select = this.prefixes.concat(select).join(' ');
         const response = await this.sparql(select)
-        let node_class = null
+        let node_class = []
         for (let binding of response.results.bindings) {
-            if (binding.class) node_class = binding.class.value
+            if (binding.class) node_class.push(binding.class.value)
         }
-
+        console.log(node_class)
         return node_class;
     }
 
