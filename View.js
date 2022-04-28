@@ -1,16 +1,23 @@
 class View {
-    constructor(model, width, height, horizontal_margin, vertical_margin, node_size, node_colors) {
+    constructor() {
+
+        this.p5nodes = {};
+        this.p5edges = [];
+        this.zoom_level = 1;
+
+        this.mode = 'horizontal';
+
+    }
+
+    init(model, width, height, horizontal_margin, vertical_margin, node_size, node_colors, font) {
         this.model = model;
         this.width = width;
         this.height = height;
         this.horizontal_margin = horizontal_margin;
         this.vertical_margin = vertical_margin;
-        this.p5nodes = {};
-        this.p5edges = [];
-        this.zoom_level = 1;
+        this.node_colors = node_colors;
         this.r = node_size;
-        this.mode = 'horizontal'
-        this.node_colors = node_colors
+        this.font = font;
     }
 
     translate_nodes(x, y, coords_old) {
@@ -166,9 +173,9 @@ class View {
             let node_color = null;
             for (let node_class of Object.keys(this.node_colors)) {
 
-                if (p5node.class.includes(node_class)) node_color = node_colors[node_class]
+                if (p5node.get_classes().includes(node_class)) node_color = node_colors[node_class]
             }
-            p5node.show(node_color)
+            p5node.show(node_color, this.font)
         }
 
     }

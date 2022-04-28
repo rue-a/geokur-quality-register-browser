@@ -34,10 +34,11 @@ const horizontal_margin = width / 5;
 const vertical_margin = height / 5;
 
 const node_model = new Model();
-const view = new View(node_model, width, height, horizontal_margin, vertical_margin, radius, node_colors);
+const view = new View();
 
 // 
-let canvas
+let canvas;
+let font;
 let left_clicked_x;
 let left_clicked_y;
 let coords_old = {};
@@ -156,8 +157,30 @@ function enable_hover() {
   }
 }
 
+// function enable_hover() {
+//   let description = null
+//   for (let p5node of view.get_nodes()) {
+//     let hover = p5node.hover();
+//     if (hover) description = hover;
+//   }
+//   if (description) {
+//     var text_width = textWidth(String(description));
+
+//     fill(100);
+//     noStroke()
+//     rect(mouseX - 6, mouseY - 15, text_width + 12, 16);
+//     fill(255);
+//     // noStroke()
+//     textAlign(LEFT, BOTTOM)
+//     text(String(description), mouseX, mouseY);
+//     // reset
+//     fill(150)
+//   }
+// }
+
 function print_controls() {
-  let controls = 'Double left click on a node: Expand this node\nLeft click and hold a node: Drag this node\nStrg plus left click on a node: Go to this nodes IRI\nWheel click on a node: Remove this node from the visualization\n (careful; removing the last node requires reloading to bring it back)'
+  textFont(font);
+  let controls = 'Double left click on a node: Expand this node\nLeft click and hold a node: Drag this node\nStrg plus left click on a node: Go to this nodes IRI\nWheel click on a node: Remove this node from the visualization\n (careful; removing the last node requires reloading the page)'
   textAlign(RIGHT, BOTTOM)
   text(controls, width - 8, height - 8)
   fill(150)
@@ -167,6 +190,9 @@ function print_controls() {
   line(0, 0, 0, height)
 }
 
+function preload() {
+  font = loadFont('./assets/Inconsolata.otf');
+}
 
 function setup() {
 
@@ -179,6 +205,16 @@ function setup() {
   })
   node_model.set_endpoint(endpoint);
   node_model.set_prefixes(PREFIXES);
+
+  view.init(
+    node_model,
+    width,
+    height,
+    horizontal_margin,
+    vertical_margin,
+    radius,
+    node_colors,
+    font);
 
 
   node_model.add_node(initial_node).then(() => {

@@ -70,7 +70,6 @@ class Model {
         for (let binding of response.results.bindings) {
             if (binding.class) node_class.push(binding.class.value)
         }
-        console.log(node_class)
         return node_class;
     }
 
