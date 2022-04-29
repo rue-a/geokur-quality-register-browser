@@ -1,11 +1,7 @@
 class P5ArrowConnector {
-  constructor(nodeFrom, nodeTo, label, reverseDirection) {
+  constructor(nodeFrom, nodeTo, label) {
     this.nodeFrom = nodeFrom;
     this.nodeTo = nodeTo
-    if (reverseDirection) {
-      this.nodeTo = nodeFrom;
-      this.nodeFrom = nodeTo;
-    }
     this.label = label
   }
 

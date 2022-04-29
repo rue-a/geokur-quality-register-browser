@@ -32,6 +32,13 @@ class P5Node {
     get_ingoing_edges() { return this.ingoing_edges }
     get_outgoing_edges() { return this.outgoing_edges }
 
+
+    focussed() {
+        let focussed = false;
+        if (this.hovered) focussed = true;
+        return focussed;
+    }
+
     double_clicked() {
         const distance = dist(mouseX, mouseY, this.x, this.y);
         if (distance < this.r) {
@@ -106,7 +113,7 @@ class P5Node {
     }
 
     wrap_text(str, maxWidth) {
-        // function is hacked together with components from P5.js
+        // hacked with logics from P5.js' function text(str, x, y, [x2], [y2])
         let line;
         let lines;
         let words;
@@ -172,40 +179,44 @@ class P5Node {
         circle(0, 0, 2 * this.r);
 
         textFont(font);
-        let text_size = 14;
-        textSize(text_size);
-        let line_height = textLeading()
         if (text_color) this.text_color = text_color
-        const text_width = textWidth(String(this.label));
+        const text_size = 14;
+        textSize(text_size);
+        const line_height = textLeading()
+
+        let label_width = 300;
+        const label_lines = this.wrap_text(this.label, label_width);
+        label_width = 0;
+        for (let line of label_lines) {
+            if (textWidth(line) > label_width) label_width = textWidth(line);
+
+        }
+        const label_height = line_height * label_lines.length;
+
+
         fill('rgba(255,255,255,0.8)');
         noStroke()
-        rect(-text_width / 2 - 8, -text_size / 2 + 2.5, text_width + 8, text_size);
+        rect(-label_width / 2 - 8, -label_height / 2, label_width + 8, label_height);
         fill(this.text_color)
-        textAlign(CENTER, CENTER);
-        text(this.label, 0, 0);
+        textAlign(CENTER, TOP);
+        text(this.label, -label_width / 2, -label_height / 2, label_width, label_height);
 
         if (this.hovered_prolonged) {
             if (this.description) {
-                let desc_width = 150;
-                let lines = this.wrap_text(String(this.description), desc_width);
+                const desc_width = 150;
+                const desc_lines = this.wrap_text(this.description, desc_width);
+                const desc_height = line_height * desc_lines.length;
 
-                let desc_height = line_height * lines.length;
-                fill('rgba(100,100,100,0.5)');
+                console.log(label_height)
+                fill('rgba(130,130,130,0.9)');
                 noStroke()
-
-                rect(-desc_width / 2 - 4, line_height - 4, desc_width + 4, desc_height + 4);
+                rect(-desc_width / 2 - 4, label_height / 2 + 3, desc_width + 4, desc_height + 4);
                 fill(255);
                 noStroke();
                 textAlign(CENTER, TOP);
-                text(String(this.description), -desc_width / 2, 16, desc_width, desc_height);
-                // reset
+                text(this.description, -desc_width / 2, label_height / 2 + 3, desc_width, desc_height);
             }
-
-
         }
-
-
-
         pop();
     }
 }

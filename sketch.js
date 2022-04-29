@@ -24,7 +24,7 @@ node_colors = {
   "http://www.w3.org/ns/dqv#Metric": 'rgb(76, 240, 166)'
 };
 
-const radius = 20;
+const radius = 25;
 
 let hover = true;
 

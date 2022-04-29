@@ -149,16 +149,25 @@ class View {
     update_data(exclude_node_id = false) {
         let exclude_node = null;
         if (exclude_node_id) {
-            exclude_node = this.p5nodes[exclude_node_id]
+            exclude_node = this.p5nodes[exclude_node_id];
         }
 
-        this.update_nodes(this.model.get_meta(), this.model.get_layout())
+        this.update_nodes(this.model.get_meta(), this.model.get_layout());
 
         if (exclude_node_id) {
             this.p5nodes[exclude_node_id] = exclude_node;
         }
-        this.update_edges(this.model.get_edges())
+        this.update_edges(this.model.get_edges());
 
+    }
+
+    order_p5nodes(p5nodes) {
+        for (let i in p5nodes) {
+            let p5node = p5nodes[i];
+            if (p5node.focussed() && i < (p5nodes.length - 1)) {
+                [[p5nodes[i], p5nodes[p5nodes.length - 1]] = [p5nodes[p5nodes.length - 1], p5nodes[i]]];
+            }
+        }
     }
 
 
@@ -167,15 +176,17 @@ class View {
         // this.adjust_to_properties()
 
         for (let p5edge of this.p5edges) {
-            p5edge.show()
+            p5edge.show();
         }
-        for (let p5node of Object.values(this.p5nodes)) {
+        let p5nodes = Object.values(this.p5nodes);
+        this.order_p5nodes(p5nodes);
+
+        for (let p5node of p5nodes) {
             let node_color = null;
             for (let node_class of Object.keys(this.node_colors)) {
-
-                if (p5node.get_classes().includes(node_class)) node_color = node_colors[node_class]
+                if (p5node.get_classes().includes(node_class)) node_color = node_colors[node_class];
             }
-            p5node.show(node_color, this.font)
+            p5node.show(node_color, this.font);
         }
 
     }
