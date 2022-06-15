@@ -1,4 +1,4 @@
-# RDFViz
+# GeoKur Quality Register Browser
 
 *this repo is in the works*
 
