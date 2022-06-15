@@ -1,7 +1,5 @@
 # GeoKur Quality Register Browser
 
-*this repo is in the works*
-
 https://rue-a.github.io/geokur-quality-register-browser/
 
-Generic RDF visualization to plug into websites. It uses P5 to draw the nodes. Currently, the definition of the start node and graph expansion rules (which RDF properties are used) can be found in `sketch.js`.
+This repository is an example application of the RDF Visualization Software that is developed at https://github.com/rue-a/rdf_viz 
